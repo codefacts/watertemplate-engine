@@ -12,7 +12,7 @@
     </parent>
 
     <artifactId>watertemplate-engine</artifactId>
-    <version>1.2.1-SNAPSHOT</version>
+    <version>1.2.1-CUSTOM</version>
     <packaging>jar</packaging>
 
     <name>Water Template Engine</name>

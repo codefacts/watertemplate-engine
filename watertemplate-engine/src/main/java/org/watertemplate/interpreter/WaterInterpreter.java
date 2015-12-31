@@ -8,6 +8,8 @@ import org.watertemplate.interpreter.parser.Parser;
 import org.watertemplate.interpreter.parser.Token;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
@@ -34,8 +36,19 @@ public abstract class WaterInterpreter {
     }
 
     InputStream templateFileWith(final Locale locale) {
-        final String templateFileURI = "templates" + File.separator + locale + File.separator + templateFilePath;
-        InputStream stream = getClass().getClassLoader().getResourceAsStream(templateFileURI);
+        InputStream stream;
+
+        if (templateFilePath.startsWith("file:")) {
+            final String templateFileURI = templateFilePath.substring("file:".length());
+            try {
+                stream = new FileInputStream(templateFileURI);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            final String templateFileURI = "templates" + File.separator + locale + File.separator + templateFilePath;
+            stream = getClass().getClassLoader().getResourceAsStream(templateFileURI);
+        }
 
         if (stream == null && !locale.equals(defaultLocale)) {
             stream = templateFileWith(defaultLocale);
